@@ -16,7 +16,7 @@ Claude does the rest. Nothing to paste into a spreadsheet, nothing to configure 
 
 ## Install
 
-**If you use Claude Desktop**, double-click `wize-snaps.mcpb`. Claude asks for your API key, you paste it, done.
+**If you use Claude Desktop**, download [`wize-snaps.mcpb`](https://github.com/developer-wizer/wize-snaps-recipes/releases/latest/download/wize-snaps.mcpb) and double-click it. Claude asks for your API key, you paste it, done.
 
 **If you use Claude Code, Cursor, or anything else that takes an MCP config**, add this:
 
@@ -25,7 +25,7 @@ Claude does the rest. Nothing to paste into a spreadsheet, nothing to configure 
   "mcpServers": {
     "wize-snaps": {
       "command": "node",
-      "args": ["/full/path/to/wizesnaps-mcp/server/index.js"],
+      "args": ["/full/path/to/wize-snaps-recipes/mcp-server/server/index.js"],
       "env": {
         "WIZE_SNAPS_API_KEY": "wz_live_your_key_here"
       }

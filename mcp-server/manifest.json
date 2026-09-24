@@ -1,8 +1,8 @@
 {
-  "manifest_version": "0.2",
+  "manifest_version": "0.3",
   "name": "wize-snaps",
   "display_name": "Wize Snaps",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Read how a person makes decisions, and rewrite your message to suit them.",
   "long_description": "Wize Snaps gives Claude two abilities. Ask it to read how a specific person makes decisions, paste in what they have written about themselves, and it returns one of seven decision profiles with a confidence level and a plain-English summary. Then hand it your draft email or LinkedIn message and it tells you what already works, where the message is likely to land badly for this person, and gives you a rewritten version.\n\nThe read is only as good as the context you give it. Paste the person's own words rather than your summary of them. A LinkedIn About section returns a High confidence read; two lines of description returns a hedge.\n\nNeeds a Wize Snaps API key. New accounts get 100 free credits. A profile costs 1 credit and a rewrite costs 2.",
   "author": {
@@ -11,14 +11,28 @@
   },
   "homepage": "https://www.wizesnaps.com/api-tool",
   "documentation": "https://snap.wizer.business/docs",
-  "keywords": ["sales", "outreach", "decision science", "personalisation", "crm", "gtm"],
+  "support": "https://github.com/developer-wizer/wize-snaps-recipes/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/developer-wizer/wize-snaps-recipes.git"
+  },
+  "keywords": [
+    "sales",
+    "outreach",
+    "decision science",
+    "personalisation",
+    "crm",
+    "gtm"
+  ],
   "license": "MIT",
   "server": {
     "type": "node",
     "entry_point": "server/index.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/server/index.js"],
+      "args": [
+        "${__dirname}/server/index.js"
+      ],
       "env": {
         "WIZE_SNAPS_API_KEY": "${user_config.api_key}"
       }
@@ -43,7 +57,15 @@
       "required": true
     }
   },
+  "privacy_policies": [
+    "https://www.wizer.business/privacy-policy"
+  ],
   "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
     "runtimes": {
       "node": ">=18.0.0"
     }
