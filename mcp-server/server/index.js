@@ -20,8 +20,8 @@
 const API_BASE = process.env.WIZE_SNAPS_API_BASE || 'https://backend.snap.wizer.business';
 const API_KEY  = process.env.WIZE_SNAPS_API_KEY  || '';
 
-const SERVER_INFO = { name: 'wize-snaps', version: '1.1.0' };
-const SUPPORTED_PROTOCOLS = ['2025-06-18', '2025-03-26', '2024-11-05'];
+const SERVER_INFO = { name: 'wize-snaps', version: '1.1.1' };
+const SUPPORTED_PROTOCOLS = ['2025-11-25', '2025-06-18', '2025-03-26', '2024-11-05'];
 
 /* ---------------------------------------------------------------- */
 /* Tools                                                             */
@@ -73,7 +73,8 @@ const TOOLS = [
         }
       },
       required: ['name', 'context']
-    }
+    },
+    annotations: { idempotentHint: false, openWorldHint: true }
   },
   {
     name: 'rewrite_for_decision_profile',
@@ -105,7 +106,8 @@ const TOOLS = [
         }
       },
       required: ['snap_id', 'message']
-    }
+    },
+    annotations: { idempotentHint: false, openWorldHint: true }
   }
 ];
 
