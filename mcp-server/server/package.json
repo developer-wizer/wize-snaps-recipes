@@ -1,0 +1,10 @@
+{
+  "name": "wize-snaps-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for the Wize Snaps decision profile API",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": { "test": "node test.js" },
+  "engines": { "node": ">=18.0.0" },
+  "license": "MIT"
+}
