@@ -1,76 +1,58 @@
-# Wize Snaps recipes
+# Decision profiles in a spreadsheet
 
-Working things built on the [Wize Snaps API](https://www.wizesnaps.com/api-tool). Take them, change them, or use them as a starting point for something better.
+Paste a script into a Google Sheet and your lead list starts telling you how each person decides, and rewriting your draft to suit. About ten minutes to set up, and nothing to deploy.
 
-Wize Snaps reads how a specific person makes decisions and rewrites your message to suit them. It's built by [Wizer](https://www.wizer.business/), and the seven decision profiles come from Dr Juliet Bourke's research on decision lenses.
+Full walkthrough with screenshots: [wizesnaps.com/google-sheets-decision-profiles](https://www.wizesnaps.com/google-sheets-decision-profiles)
 
-## What's here
+## What lands in the sheet
 
-**Google Sheets** ([walkthrough](https://www.wizesnaps.com/google-sheets-decision-profiles) · [code](./google-sheets)) — an Apps Script that turns a Google Sheet into a lead list with decision profiles in it. Paste the script in, set your API key, and two menu items fill the columns. No deployment, about ten minutes to set up.
+You give it a name, a role, and something the person has actually written. It gives you a decision profile, a confidence level, a plain-English read, and a rewrite of whatever you were about to send them.
 
-**Claude** ([walkthrough](https://www.wizesnaps.com/claude-decision-profiles) · [download](https://github.com/developer-wizer/wize-snaps-recipes/releases/latest/download/wize-snaps.mcpb) · [code](./mcp-server)) — an MCP server that gives Claude two tools: read how someone decides, and rewrite a message for them. Zero dependencies, and it installs in Claude Desktop by double-clicking a file. Works in Claude Code, Cursor, and anything else that speaks MCP.
+| Name | Profile | Secondary | Confidence | Summary |
+|---|---|---|---|---|
+| Alex Morgan | Achiever | Analyzer | High | Makes decisions by zeroing in on the business outcome and financial impact, while relying on clear models and tested assumptions to approve or reject options quickly. |
 
-Both are MIT licensed.
+## Setting it up
 
-## The API, in full
+1. Open a new Google Sheet.
+2. **Extensions › Apps Script.** Delete the placeholder, paste in [`WizeSnaps.gs`](./WizeSnaps.gs), save.
+   If the sheet already has code behind it, add this as a new file instead of replacing what's there. Apps Script shares one namespace across every file in a project, so two functions with the same name means one silently stops working.
+3. Reload the sheet. A **Wize Snaps** menu appears next to Help.
+4. **Setup › Set up this sheet** builds a Leads tab with the right columns and one example row. Then **Set API key**, then **Check connection**.
+5. Run **Get profiles**, then **Analyse drafts**. In that order: the rewrite needs the profile it's working against.
 
-Two calls. That's the whole surface.
+On the first run Google shows an authorisation screen and then says the app is unverified. Click Advanced and go through. It says that because it's your own script, not a published add-on. It's your code, calling your API, with your key.
 
-```
-POST https://backend.snap.wizer.business/api/v1/snap
-Header: x-api-key: wz_live_...
+Get a key at [snap.wizer.business/dashboard/developers](https://snap.wizer.business/dashboard/developers). New accounts start with 100 free credits.
 
-{ "name": "Alex Morgan",
-  "jobType": "Sales Director",
-  "ageRange": "35-44",
-  "notes": "<what this person has written about themselves>" }
-```
+## What goes in each column
 
-Returns a decision profile, a secondary profile, a confidence level, a summary, the reasoning behind it, and a `snapId`.
+Five columns are yours. The script writes the rest.
 
-```
-POST https://backend.snap.wizer.business/api/v1/snap/comms
-Header: x-api-key: wz_live_...
+| Column | What belongs there |
+|---|---|
+| **Name** | Required. |
+| **Job type** | Their role. Optional, but it does a lot of work for one field. |
+| **Age range** | Optional. Leave it blank if you're guessing. |
+| **LinkedIn About / posts** | Their own words, pasted. About section, a recent post, a conference bio. |
+| **Notes / context** | What you know that isn't public. How they ran the last call, what they pushed back on, who they brought in. |
 
-{ "snapId": 4359,
-  "messageType": "email",
-  "messageText": "<your draft>" }
-```
+Both context columns go to the API together, labelled, so it can tell how someone describes themselves apart from how you describe them. Either one on its own is fine.
 
-Returns what works in the draft, where it's likely to land badly for that person, suggestions, and a rewrite.
+## Credits
 
-Get a key at [snap.wizer.business/dashboard/developers](https://snap.wizer.business/dashboard/developers). New accounts start with 100 free credits. A profile costs 1 credit, a rewrite costs 2.
+A profile costs 1 credit, a rewrite costs 2.
 
-## The thing that decides whether any of this is any good
+Rows that already have a result are skipped and not charged, so adding five people to a finished list of fifty costs five credits, not fifty-five. To redo a profile, clear that row's Profile cell and run it again. To redo a rewrite, clear its Rewrite cell.
 
-The profile is only as good as the context you send.
+There's no `=WIZESNAP()` formula on purpose. Sheets re-runs custom formulas every time anything recalculates, which on a list of any size would spend credits quietly all day. It runs from the menu and writes plain values instead.
 
-We tested the same person three ways. A one-line CRM note ("spoke Tuesday, keen") comes back Low confidence. Two lines of description comes back Medium. Their actual LinkedIn About section comes back High.
+## Two things it won't do
 
-A Low confidence profile is worse than no profile, because it sits in a column looking like data. Send the person's own words. Both recipes here are built around getting that text in front of the API rather than a summary of it.
+**Read a LinkedIn URL.** The API reads the text you give it. It doesn't fetch the page. Copy the About section across instead.
 
-The API does not fetch web pages. Passing a LinkedIn URL gets you a profile inferred from the name in the URL, which is the most dangerous failure mode available, because it looks exactly like a real answer. The MCP server detects this and says so.
-
-## Things we found building these
-
-Worth knowing before you build your own.
-
-**It's stable across runs.** The same About section returned Achiever with an Analyzer secondary, High confidence, from the spreadsheet and from the MCP server six days apart. Two clients, two weeks, same answer.
-
-**It discriminates.** A consensus-led people leader came back Collaborator with Analyzer behind it, off a completely different piece of writing. It isn't pattern-matching on confident prose.
-
-**The rewrite is a strong draft with gaps, not a finished email.** It leaves square-bracket placeholders where it needs a date or a name, which is the right behaviour, but don't tell people they can paste it straight into a message.
-
-**The rewrite doesn't fact-check the message it's given.** Twice we saw it preserve an unsourced statistic while rewriting for someone who had explicitly said they distrust unsourced claims. Check the claims in your own draft before you rely on the rewrite.
-
-**Credits go faster than you expect.** Setting up, testing and debugging a first integration will spend twenty or thirty before you've profiled a single real prospect.
-
-## Build your own
-
-The whole API is two POST requests with one header. Anything that can make an HTTP call can use it — a Zapier or Make scenario, an n8n workflow, a CRM webhook, fifty lines in whatever language you already write.
-
-If you build something, open an issue and tell us. We'll link it.
+**Rescue a thin CRM.** A database of names and one-line notes produces a column of Low confidence guesses. If your CRM holds nothing the person has written, you need a step that gets that text in before this one is worth running.
 
 ## Licence
 
-MIT. Do what you like with it.
+MIT.

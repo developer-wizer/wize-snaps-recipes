@@ -241,8 +241,10 @@ function runProfiles() {
     var name = str_(sheet.getRange(r, COL.name).getValue());
     if (!name) { continue; }
 
-    // Already has a result, leave it alone. Clear the Snap ID to redo a row.
-    if (str_(sheet.getRange(r, COL.snapId).getValue())) { skipped++; continue; }
+    // Already has a result, leave it alone. Clear the Profile cell to redo a row.
+    // Rows showing "Needs context" or an error have no Snap ID, so they are retried.
+    if (str_(sheet.getRange(r, COL.snapId).getValue()) &&
+        str_(sheet.getRange(r, COL.profile).getValue())) { skipped++; continue; }
 
     if (Date.now() - started > MAX_RUNTIME_MS) { stoppedEarly = true; break; }
 
