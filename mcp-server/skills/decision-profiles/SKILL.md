@@ -7,6 +7,10 @@ description: Read how a specific person makes decisions and rewrite a message to
 
 The Wize Snaps tools return a real read from a model built on Dr Juliet Bourke's decision-lens research, with a calibrated confidence level. Use them for the read and use your own knowledge only to interpret what they return.
 
+## If the tools are not available
+
+The tools run on the user's computer, so they load in Claude Code but not in claude.ai chat, and not in Cowork yet. If `read_decision_profile` is not among the available tools, do not produce a profile from your own reasoning. Say in one line that the Wize Snaps tools aren't connected here, and point the user to the Claude Desktop extension at https://www.wizesnaps.com/claude-decision-profiles or to installing this plugin in Claude Code.
+
 ## When to call the tools
 
 - Call `read_decision_profile` whenever the user asks how a named person decides, what they respond to, or how to approach or write to them. Do not answer from your own reasoning about the text. An inferred answer has no confidence level and is not a Wize Snaps profile.
