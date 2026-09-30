@@ -1,0 +1,23 @@
+{
+  "name": "wize-snaps",
+  "displayName": "Wize Snaps",
+  "version": "1.1.1",
+  "description": "Read how a specific person makes decisions, then rewrite your message to suit them. Powered by the Wize Snaps API.",
+  "author": {
+    "name": "Wizer Technologies",
+    "url": "https://www.wizer.business"
+  },
+  "homepage": "https://www.wizesnaps.com/claude-decision-profiles",
+  "repository": "https://github.com/developer-wizer/wize-snaps-recipes",
+  "license": "MIT",
+  "keywords": ["sales", "outreach", "decision science", "personalisation", "decision profiles"],
+  "userConfig": {
+    "api_key": {
+      "type": "string",
+      "title": "Wize Snaps API key",
+      "description": "Get one at snap.wizer.business/dashboard/developers. New accounts start with 100 free credits.",
+      "sensitive": true,
+      "required": true
+    }
+  }
+}
