@@ -18,7 +18,16 @@ Claude does the rest. Nothing to paste into a spreadsheet, nothing to configure 
 
 **If you use Claude Desktop**, download [`wize-snaps.mcpb`](https://github.com/developer-wizer/wize-snaps-recipes/releases/latest/download/wize-snaps.mcpb) and double-click it. Claude asks for your API key, you paste it, done.
 
-**If you use Claude Code, Cursor, or anything else that takes an MCP config**, add this:
+**If you use Claude Code or Cowork**, install it as a plugin. It adds the server plus a skill that keeps Claude's answers in one consistent format. In Claude Code:
+
+```
+/plugin marketplace add developer-wizer/wize-snaps-recipes
+/plugin install wize-snaps@wize-snaps
+```
+
+In Cowork, go to Customize › Plugins › Add marketplace and paste `developer-wizer/wize-snaps-recipes`. Claude asks for your API key when the plugin is enabled.
+
+**If you use Cursor, or anything else that takes an MCP config**, add this:
 
 ```json
 {

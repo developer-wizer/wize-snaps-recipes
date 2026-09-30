@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "wize-snaps": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/server/index.js"],
+      "env": {
+        "WIZE_SNAPS_API_KEY": "${user_config.api_key}"
+      }
+    }
+  }
+}
