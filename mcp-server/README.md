@@ -18,14 +18,14 @@ Claude does the rest. Nothing to paste into a spreadsheet, nothing to configure 
 
 **If you use Claude Desktop**, download [`wize-snaps.mcpb`](https://github.com/developer-wizer/wize-snaps-recipes/releases/latest/download/wize-snaps.mcpb) and double-click it. Claude asks for your API key, you paste it, done.
 
-**If you use Claude Code or Cowork**, install it as a plugin. It adds the server plus a skill that keeps Claude's answers in one consistent format. In Claude Code:
+**If you use Claude Code**, install it as a plugin. It adds the server plus a skill that keeps Claude's answers in one consistent format:
 
 ```
 /plugin marketplace add developer-wizer/wize-snaps-recipes
 /plugin install wize-snaps@wize-snaps
 ```
 
-In Cowork, go to Customize › Plugins › Add marketplace and paste `developer-wizer/wize-snaps-recipes`. Claude asks for your API key when the plugin is enabled.
+Claude Code asks for your API key when you enable the plugin and keeps it in your system's secure credential store. The plugin runs on your own computer, so it works in Claude Code but not in claude.ai chat.
 
 **If you use Cursor, or anything else that takes an MCP config**, add this:
 
@@ -80,6 +80,19 @@ node server/test.js
 ```
 
 Runs the server against a mock API and checks the protocol, both tools, the confidence warnings, and error handling. No credits spent, no key needed.
+
+## What leaves your computer
+
+The server sends these to the Wize Snaps API at `backend.snap.wizer.business`, over HTTPS, with your API key:
+
+- To read a profile: the person's name, the context text you or Claude pass (for example their LinkedIn About section), and their role and age range if given.
+- To rewrite a message: the `snap_id` from the profile, your draft message, and the message type.
+
+It sends nothing else. It doesn't read your files, your other conversations or anything on your computer, and it doesn't store data itself. Wize Snaps handles what it receives under its privacy policy: [wizesnaps.com/privacy](https://www.wizesnaps.com/privacy).
+
+## Support
+
+Email [info@wizer.business](mailto:info@wizer.business), or open an issue on [GitHub](https://github.com/developer-wizer/wize-snaps-recipes/issues).
 
 ## Licence
 
