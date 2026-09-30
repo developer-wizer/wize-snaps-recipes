@@ -8,7 +8,7 @@ Wize Snaps reads how a specific person makes decisions and rewrites your message
 
 **Google Sheets** ([walkthrough](https://www.wizesnaps.com/google-sheets-decision-profiles) · [code](./google-sheets)) — an Apps Script that turns a Google Sheet into a lead list with decision profiles in it. Paste the script in, set your API key, and two menu items fill the columns. No deployment, about ten minutes to set up.
 
-**Claude** ([walkthrough](https://www.wizesnaps.com/claude-decision-profiles) · [download](https://github.com/developer-wizer/wize-snaps-recipes/releases/latest/download/wize-snaps.mcpb) · [code](./mcp-server)) — an MCP server that gives Claude two tools: read how someone decides, and rewrite a message for them. Zero dependencies. It installs in Claude Desktop by double-clicking a file, and in Claude Code and Cowork as a plugin from this repo. Works in Cursor and anything else that speaks MCP.
+**Claude** ([walkthrough](https://www.wizesnaps.com/claude-decision-profiles) · [download](https://github.com/developer-wizer/wize-snaps-recipes/releases/latest/download/wize-snaps.mcpb) · [code](./mcp-server)) — an MCP server that gives Claude two tools: read how someone decides, and rewrite a message for them. Zero dependencies. It installs in Claude Desktop by double-clicking a file, and in Claude Code as a plugin from this repo. Works in Cursor and anything else that speaks MCP.
 
 Both are MIT licensed.
 
