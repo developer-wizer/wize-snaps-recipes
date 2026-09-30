@@ -20,7 +20,7 @@
 const API_BASE = process.env.WIZE_SNAPS_API_BASE || 'https://backend.snap.wizer.business';
 const API_KEY  = process.env.WIZE_SNAPS_API_KEY  || '';
 
-const SERVER_INFO = { name: 'wize-snaps', version: '1.1.1' };
+const SERVER_INFO = { name: 'wize-snaps', version: '1.2.0' };
 const SUPPORTED_PROTOCOLS = ['2025-11-25', '2025-06-18', '2025-03-26', '2024-11-05'];
 
 /* ---------------------------------------------------------------- */
@@ -102,7 +102,12 @@ const TOOLS = [
         },
         message_type: {
           type: 'string',
-          description: 'What kind of message this is, for example "email" or "linkedin". Defaults to email.'
+          enum: ['outreach', 'text', 'email', 'internal_comms', 'difficult_conversation', 'meeting_prep'],
+          description:
+            'What kind of message this is. "outreach" for a cold or first-touch message, including ' +
+            'LinkedIn messages and connection notes. "email" for an email. "text" for an SMS or chat ' +
+            'message. "internal_comms" for a message to colleagues. "difficult_conversation" for ' +
+            'delivering bad news or pushback. "meeting_prep" for notes before a meeting. Defaults to email.'
         }
       },
       required: ['snap_id', 'message']
@@ -214,16 +219,38 @@ async function readDecisionProfile(args) {
   return out;
 }
 
+const MESSAGE_TYPES = ['outreach', 'text', 'email', 'internal_comms', 'difficult_conversation', 'meeting_prep'];
+
+// Models and people say "linkedin" or "dm"; the API only accepts its six values.
+const MESSAGE_TYPE_ALIASES = {
+  linkedin: 'outreach', linkedin_message: 'outreach', inmail: 'outreach', dm: 'outreach',
+  connection_request: 'outreach', cold_email: 'outreach', cold: 'outreach', prospecting: 'outreach',
+  sms: 'text', chat: 'text', whatsapp: 'text', slack: 'internal_comms',
+  internal: 'internal_comms', memo: 'internal_comms', meeting: 'meeting_prep',
+  difficult: 'difficult_conversation', feedback: 'difficult_conversation', mail: 'email'
+};
+
+function normaliseMessageType(value) {
+  if (value === undefined || value === null || String(value).trim() === '') return 'email';
+  const key = String(value).trim().toLowerCase().replace(/[\s-]+/g, '_');
+  if (MESSAGE_TYPES.includes(key)) return key;
+  if (MESSAGE_TYPE_ALIASES[key]) return MESSAGE_TYPE_ALIASES[key];
+  throw new Error(
+    'Unknown message_type "' + value + '". Use one of: ' + MESSAGE_TYPES.join(', ') + '.'
+  );
+}
+
 async function rewriteForDecisionProfile(args) {
   const snapId  = Number(args.snap_id);
   const message = String(args.message || '').trim();
 
   if (!Number.isFinite(snapId)) throw new Error('A snap_id is required. Call read_decision_profile first.');
   if (!message) throw new Error('A draft message is required.');
+  const messageType = normaliseMessageType(args.message_type);
 
   const res = await callApi('/api/v1/snap/comms', {
     snapId,
-    messageType: String(args.message_type || 'email'),
+    messageType,
     messageText: message
   });
 
@@ -245,6 +272,7 @@ async function rewriteForDecisionProfile(args) {
 
   const out = {
     snap_id: snapId,
+    message_type: messageType,
     what_works: pick(['strengths', 'whatWorks', 'what_works', 'positives']),
     risks:      pick(['risks', 'weaknesses', 'concerns', 'watchOuts', 'watch_outs']),
     suggestions: pick(['suggestions', 'improvements', 'recommendations']),

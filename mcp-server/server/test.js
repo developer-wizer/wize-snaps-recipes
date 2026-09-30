@@ -19,6 +19,7 @@ const { spawn } = require('child_process');
 /* ---------------------------------------------------------------- */
 
 const GOOD_KEY = 'wz_test_mock';
+let lastComms = null;
 
 function profileFor(notes) {
   if (/keen/i.test(notes)) return { confidence: 'Low' };
@@ -63,6 +64,9 @@ const api = http.createServer((req, res) => {
     }
 
     if (req.url === '/api/v1/snap/comms') {
+      const TYPES = ['outreach', 'text', 'email', 'internal_comms', 'difficult_conversation', 'meeting_prep'];
+      if (!TYPES.includes(body.messageType)) return reply(400, { message: 'Invalid message type' });
+      lastComms = body;
       if (body.snapId === 1) return reply(200, { data: { somethingElse: true } });
       return reply(200, {
         data: {
@@ -167,12 +171,14 @@ async function main() {
 
   srv.notify('notifications/initialized');
 
-  await test('server version matches manifest and package.json', async () => {
+  await test('server version matches manifest, package.json and plugin.json', async () => {
     const r = await srv.request('initialize', { protocolVersion: '2025-06-18', capabilities: {} });
     const manifest = require(path.join(__dirname, '..', 'manifest.json'));
     const pkg = require(path.join(__dirname, 'package.json'));
+    const plugin = require(path.join(__dirname, '..', '.claude-plugin', 'plugin.json'));
     assert.strictEqual(r.result.serverInfo.version, manifest.version);
     assert.strictEqual(pkg.version, manifest.version);
+    assert.strictEqual(plugin.version, manifest.version);
   });
 
   await test('ping', async () => {
@@ -245,6 +251,40 @@ async function main() {
     assert.deepStrictEqual(d.risks, ['"Any thoughts" is vague.']);
     assert.ok(d.rewrite.includes('[date]'));
     assert.strictEqual(d.credits_used, 2);
+  });
+
+  await test('message_type defaults to email', async () => {
+    await call(srv, 'rewrite_for_decision_profile', { snap_id: 4359, message: 'Hi' });
+    assert.strictEqual(lastComms.messageType, 'email');
+  });
+
+  await test('"linkedin" is sent as outreach, which the API accepts', async () => {
+    const r = await call(srv, 'rewrite_for_decision_profile', { snap_id: 4359, message: 'Hi', message_type: 'LinkedIn' });
+    assert.strictEqual(r.result.isError, false);
+    assert.strictEqual(lastComms.messageType, 'outreach');
+    assert.strictEqual(r.result.structuredContent.message_type, 'outreach');
+  });
+
+  await test('every API message type passes through unchanged', async () => {
+    for (const t of ['outreach', 'text', 'email', 'internal_comms', 'difficult_conversation', 'meeting_prep']) {
+      const r = await call(srv, 'rewrite_for_decision_profile', { snap_id: 4359, message: 'Hi', message_type: t });
+      assert.strictEqual(r.result.isError, false, t);
+      assert.strictEqual(lastComms.messageType, t);
+    }
+  });
+
+  await test('an unknown message type fails before spending a call', async () => {
+    lastComms = null;
+    const r = await call(srv, 'rewrite_for_decision_profile', { snap_id: 4359, message: 'Hi', message_type: 'tweet' });
+    assert.strictEqual(r.result.isError, true);
+    assert.ok(/outreach/.test(r.result.content[0].text));
+    assert.strictEqual(lastComms, null);
+  });
+
+  await test('tools/list advertises the message types as an enum', async () => {
+    const r = await srv.request('tools/list');
+    const t = r.result.tools.find((x) => x.name === 'rewrite_for_decision_profile');
+    assert.strictEqual(t.inputSchema.properties.message_type.enum.length, 6);
   });
 
   await test('an unrecognised comms response is passed back raw', async () => {
