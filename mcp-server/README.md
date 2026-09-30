@@ -75,8 +75,10 @@ A profile costs 1, a rewrite costs 2. New accounts get 100 free. Claude is told 
 
 ## Running the tests
 
+From the repository root:
+
 ```bash
-node server/test.js
+node tests/test.js
 ```
 
 Runs the server against a mock API and checks the protocol, both tools, the confidence warnings, and error handling. No credits spent, no key needed.
