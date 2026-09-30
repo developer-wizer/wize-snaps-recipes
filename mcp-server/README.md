@@ -65,7 +65,7 @@ Costs 1 credit.
 
 ### `rewrite_for_decision_profile`
 
-Takes the `snap_id` from the first tool and your draft message. Returns what already works, where it's likely to land badly, and a rewritten version.
+Takes the `snap_id` from the first tool, your draft message, and the kind of message it is: `outreach` (cold or first-touch, including LinkedIn), `email`, `text`, `internal_comms`, `difficult_conversation` or `meeting_prep`. Defaults to `email`. Returns what already works, where it's likely to land badly, and a rewritten version.
 
 Costs 2 credits.
 

@@ -1,1 +1,4 @@
 server/test.js
+.claude-plugin/
+.mcp.json
+skills/
