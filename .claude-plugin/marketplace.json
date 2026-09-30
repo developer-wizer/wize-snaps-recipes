@@ -2,7 +2,8 @@
   "name": "wize-snaps",
   "owner": {
     "name": "Wizer Technologies",
-    "url": "https://www.wizer.business"
+    "url": "https://www.wizer.business",
+    "email": "info@wizer.business"
   },
   "metadata": {
     "description": "Wize Snaps plugins for Claude: read how a person makes decisions and rewrite your message to suit them."
