@@ -11,6 +11,7 @@ The Wize Snaps tools return a real read from a model built on Dr Juliet Bourke's
 
 - Call `read_decision_profile` whenever the user asks how a named person decides, what they respond to, or how to approach or write to them. Do not answer from your own reasoning about the text. An inferred answer has no confidence level and is not a Wize Snaps profile.
 - Call `rewrite_for_decision_profile` when the user wants a message adapted for someone already profiled. Pass the `snap_id` from the profile. Do not rewrite it yourself from the summary.
+- Set `message_type` to match the message: `outreach` for a cold or first-touch message, including LinkedIn messages and connection notes; `email`; `text` for SMS or chat; `internal_comms` for colleagues; `difficult_conversation` for bad news or pushback; `meeting_prep` for notes before a meeting.
 - Each call spends credits: 1 for a profile, 2 for a rewrite. Never call speculatively, and never profile the same person twice in a conversation unless the user adds new context.
 
 ## Getting a good read
