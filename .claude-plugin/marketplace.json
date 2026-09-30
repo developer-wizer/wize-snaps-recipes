@@ -1,0 +1,17 @@
+{
+  "name": "wize-snaps",
+  "owner": {
+    "name": "Wizer Technologies",
+    "url": "https://www.wizer.business"
+  },
+  "metadata": {
+    "description": "Wize Snaps plugins for Claude: read how a person makes decisions and rewrite your message to suit them."
+  },
+  "plugins": [
+    {
+      "name": "wize-snaps",
+      "source": "./mcp-server",
+      "description": "Read how a specific person makes decisions, then rewrite your message to suit them. Powered by the Wize Snaps API."
+    }
+  ]
+}
