@@ -5,7 +5,8 @@
   "description": "Read how a specific person makes decisions, then rewrite your message to suit them. Powered by the Wize Snaps API.",
   "author": {
     "name": "Wizer Technologies",
-    "url": "https://www.wizer.business"
+    "url": "https://www.wizer.business",
+    "email": "info@wizer.business"
   },
   "homepage": "https://www.wizesnaps.com/claude-decision-profiles",
   "repository": "https://github.com/developer-wizer/wize-snaps-recipes",
